@@ -8,7 +8,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityNotFoundException;
@@ -29,6 +31,7 @@ public class BoardService {
     /**
      * 게시글을 저장하는 메서드
      */
+    @Transactional
     public Long BoardRegistration(BoardRegistrationDto requestDto) {
         String title = requestDto.getTitle();
         String content = requestDto.getContent();
@@ -75,6 +78,7 @@ public class BoardService {
     /**
      * 페이징 처리를 통해 게시글 목록을 반환하는 메서드
      */
+    @Transactional
     public Page<Board> GetBoardList(int pageNo, int size) {
         PageRequest pageRequest = PageRequest.of(pageNo, size);
 
@@ -84,6 +88,7 @@ public class BoardService {
     /**
      * 게시글의 총 갯수를 반환하는 메서드
      */
+    @Transactional
     public Long GetBoardNum() {
         return boardRepository.count();
     }
@@ -91,6 +96,7 @@ public class BoardService {
     /**
      * 게시글 내용을 반환하는 메서드
      */
+    @Transactional
     public Board GetBoard(Long id) {
         return boardRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("해당 게시글을 찾을 수 없습니다."));
     }
@@ -98,6 +104,7 @@ public class BoardService {
     /**
      * 연관 게시글 목록을 반환하는 메서드
      */
+    @Transactional
     public List<RelatedBoard> GetRelatedBoard(Long id) {
         Board board = boardRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("해당 게시글을 찾을 수 없습니다."));
         List<Board> boardList = boardRepository.findAll();
